@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Chen Wei Huang (Jimmy), Dorian, Tim">
+    <meta name="description" content="alarm clock that forces you to do jumping jacks">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src https:"> -->
+
+    <title>JumpStart | M119 Final Project</title>
+
+    <link rel="stylesheet" href="index.css" />
+
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <!-- Font Awesome. Link:  https://cdnjs.com/libraries/font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const { ['log']: c } = console;
+    </script>
+</head>
+<body>
+    <div id="navbar">JumpStart</div>
+
+    <div id="wrapper">
+        <div class="row-section">
+            <div>
+                <img src="alarm01.png" alt="alarm icon" width=280>
+            </div>
+            <div class="col-section">
+                <div>
+                    <label class="text" for="alarm-input" style="margin-right: 12px;">Your wake up time:&nbsp;</label>
+                    <input id="alarm-input" type="time" name="alarm-input" value="09:30" />
+                </div>
+                <div class="text">
+                    You will be wake up in <span id="remain-time">0</span>.
+                </div>
+            </div>
+        </div>
+
+        <!-- <div style="text-align: center;"> -->
+        <!--     <div style="width: 80%; margin: auto;"> -->
+        <!--         <canvas id="Acceleration"></canvas> -->
+        <!--     </div> -->
+        <!-- </div> -->
+    </div>
+
+    <!-- To create a chart, we need to instantiate the Chart class. To do this, we need to pass in the node, jQuery instance, or 2d context of the canvas of where we want to draw the chart. -->
+    <!-- Make sure to declare the canvas tag in html before the script that creates the Chart.js object. Otherwise, the script executes and tries to find a reference to a canvas that doesn't exist -->
+    <!-- Otherwise: chart.js:13 Failed to create chart: can't acquire context from the given item -->
+    <!-- <script src="index.js"></script> -->
+    <script src="fetch.js"></script>
+    <script>
+        const getDisplayTime = (date = new Date()) => `${date.getFullYear()}/${`0${date.getMonth() + 1}`.slice(-2)}/${date.getDate()} ${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}`;
+
+        const getTimeDiff = (time1, time2) => (time1.getTime() - time2.getTime()) / (1000 * 60);
+
+        const updateRemainTime = () => {
+            const tmp = new Date();
+            tmp.setHours(alarmTime.value.split(':')[0]);
+            tmp.setMinutes(alarmTime.value.split(':')[1]);
+            tmp.setSeconds('0')
+
+            const timeDiff = getTimeDiff(tmp, new Date());
+            let val = '';
+            if (timeDiff > 0) {
+                val = timeDiff; // Is in the same day
+            } else {
+                tmp.setDate(tmp.getDate() + 1);
+                val = getTimeDiff(tmp, new Date());
+            }
+            const hours = parseInt(val / 60);
+            const mins = (val - 60 * hours).toFixed(2);
+            remainTime.innerText = `${hours} hours and ${mins} mins`;
+        }
+
+        const alarmTime = document.querySelector('input[type="time"]');
+        const remainTime = document.getElementById('remain-time');
+
+        updateRemainTime();
+        setInterval(() => updateRemainTime(), 3000);
+    </script>
+</body>
+</html>
