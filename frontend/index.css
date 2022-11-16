@@ -44,7 +44,18 @@ input {
     font-size: 1.3em;
 }
 
+select {
+    border-radius: 5px;
+    border-width: 2px;
+    font-size: 1.2em;
+}
+
 #remain-time {
+    color: red;
+    font-weight: bold;
+}
+
+#jumping-count {
     color: red;
     font-weight: bold;
 }

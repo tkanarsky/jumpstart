@@ -36,8 +36,26 @@
                     <label class="text" for="alarm-input" style="margin-right: 12px;">Your wake up time:&nbsp;</label>
                     <input id="alarm-input" type="time" name="alarm-input" value="09:30" />
                 </div>
+                <div>
+                    <label for="jumping-count-select" class="text" style="margin-right: 12px;">How many jumping jacks:&nbsp;</label>
+                    <select name="jumping-count-select" id="jumping-count-select">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                    </select>
+                </div>
                 <div class="text">
-                    You will be wake up in <span id="remain-time">0</span>.
+                    You will wake up in <span id="remain-time">0 mins</span>.
+                </div>
+                <div class="text">
+                    You still have <span id="jumping-count">5</span> jumping jacks to do
                 </div>
             </div>
         </div>
@@ -55,15 +73,20 @@
     <!-- <script src="index.js"></script> -->
     <script src="fetch.js"></script>
     <script>
+        const alarmTime = document.querySelector('input[type="time"]');
+        const remainTime = document.getElementById('remain-time');
+        const jumpingCountSelect = document.getElementById('jumping-count-select');
+        const jumpingCount = document.getElementById('jumping-count');
+
         const getDisplayTime = (date = new Date()) => `${date.getFullYear()}/${`0${date.getMonth() + 1}`.slice(-2)}/${date.getDate()} ${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}`;
 
-        const getTimeDiff = (time1, time2) => (time1.getTime() - time2.getTime()) / (1000 * 60);
+        const getTimeDiff = (time1, time2) => (time1.getTime() - time2.getTime()) / (1000 * 60); // measured in minutes
 
         const updateRemainTime = () => {
             const tmp = new Date();
             tmp.setHours(alarmTime.value.split(':')[0]);
             tmp.setMinutes(alarmTime.value.split(':')[1]);
-            tmp.setSeconds('0')
+            tmp.setSeconds('0');
 
             const timeDiff = getTimeDiff(tmp, new Date());
             let val = '';
@@ -78,9 +101,20 @@
             remainTime.innerText = `${hours} hours and ${mins} mins`;
         }
 
-        const alarmTime = document.querySelector('input[type="time"]');
-        const remainTime = document.getElementById('remain-time');
+        const alarmTimeOnChange = (evt) => {
+            // const val = evt.target.value;
+            updateRemainTime();
+        }
 
+        const jumpingCountOnChange = (evt) => {
+            const val = jumpingCountSelect.value; // const val = evt.target.value;
+            jumpingCount.innerText = val;
+        }
+
+        alarmTime.addEventListener('change', alarmTimeOnChange);
+        jumpingCountSelect.addEventListener('change', jumpingCountOnChange);
+
+        jumpingCountOnChange();
         updateRemainTime();
         setInterval(() => updateRemainTime(), 3000);
     </script>
