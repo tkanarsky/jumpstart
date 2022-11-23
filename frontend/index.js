@@ -4,120 +4,129 @@
  * npm install cors
  * npm install @abandonware/noble
  */
-const accCanvas = document.getElementById("Acceleration");
 const endpoint = "http://127.0.0.1:3000";
-const PLOT_DATA_LENGTH = 40;
 const TIME_INTERVAL = 400;
 
-let accData = {
-  ax: [0],
-  ay: [0],
-  az: [0],
-};
+let ALARM_IS_PLAYING = false;
 
-const datasetTemplate = {
-  ax: {
-    label: "ax",
-    backgroundColor: "rgb(47 119 185)",
-    borderColor: "rgb(47 119 185)",
-  },
-  ay: {
-    label: "ay",
-    backgroundColor: "rgb(255, 99, 132)",
-    borderColor: "rgb(255, 99, 132)",
-  },
-  az: {
-    label: "az",
-    backgroundColor: "rgb(109 206 67)",
-    borderColor: "rgb(109 206 67)",
-  },
-};
+const eleAlarmTime = document.querySelector('input[type="time"]');
+const eleRemainTime = document.getElementById("remain-time");
+const eleJumpingCountSelect = document.getElementById("jumping-count-select");
+const eleJumpingCount = document.getElementById("remain-jumping-count");
 
-const getLatestAccelerationData = async () => {
-  // Get the latest ax, ay, az value from backend server
-  const resp = await fetchData(endpoint, { method: "GET" });
-  let val = {};
-  await resp.json().then((data) => {
-    // console.log(data.sensorValue);
-    val = data.sensorValue;
-  });
-  // console.log(val, "#########");
+const getDisplayTime = (date = new Date()) => `${date.getFullYear()}/${`0${date.getMonth() + 1}`.slice(-2)}/${date.getDate()} ${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}`;
+
+const getTimeDiff = (time1, time2) => (time1.getTime() - time2.getTime()) / (1000 * 60); // measured in minutes
+
+const getLatestData = async () => {
+  let val = 0;
+  const f = fetchData(endpoint, { method: "GET" });
+  await f
+    .then((resp) => {
+      if (!resp.ok) {
+        throw new Error("not ok");
+      }
+      return resp.json();
+    })
+    .then((json) => {
+      // console.log(json.sensorValue);
+      val = json.sensorValue;
+    })
+    .catch((err) => console.log(err));
+  console.log(val, "#########");
   return val;
 };
 
-const updateAccelerationData = async () => {
-  const { ax, ay, az } = await getLatestAccelerationData();
-  console.log("Latest value: ", ax, ay, az, "!!!!!!!");
-  if (accData.ax.length < PLOT_DATA_LENGTH) {
-    accData = { ax: [...accData.ax, ax], ay: [...accData.ay, ay], az: [...accData.az, az] };
+const getAlarmTime = () => {
+  const tmp = new Date();
+  tmp.setHours(eleAlarmTime.value.split(":")[0]);
+  tmp.setMinutes(eleAlarmTime.value.split(":")[1]);
+  tmp.setSeconds("0");
+  return tmp;
+};
+
+const getRemainTime = () => {
+  const alarmTime = getAlarmTime();
+
+  const timeDiff = getTimeDiff(alarmTime, new Date());
+  let val = "";
+  if (timeDiff >= 0) {
+    val = timeDiff; // Is in the same day
   } else {
-    // accData.ax = accData.ax.splice(accData.ax.length - 1, 1, ax); // Replace the last element with ax
-    accData.ax.shift();
-    accData.ay.shift();
-    accData.az.shift();
-    accData.ax.push(ax);
-    accData.ay.push(ay);
-    accData.az[accData.az.length] = az; // Same as push()
+    alarmTime.setDate(alarmTime.getDate() + 1);
+    val = getTimeDiff(alarmTime, new Date());
+  }
+  return val; // in minutes
+};
+
+const shouldStopWakeUp = (count) => {
+  // console.log(count, eleJumpingCountSelect.value, typeof count !== "undefined", "!!!!!!!!!!!");
+  return typeof count !== "undefined" && count >= eleJumpingCountSelect.value;
+};
+
+const shouldWakeUp = () => {
+  const remainTime = getRemainTime();
+  return remainTime < 0.5;
+};
+
+const tryTurnOffAlarm = async () => {
+  const { count } = await getLatestData();
+  // console.log(count, !isNaN(count), !Number.isNaN(count), eleJumpingCountSelect.value, "########");
+
+  if (!isNaN(count)) {
+    // Use isNaN instead of Number.isNaN
+    updateRemainCount(eleJumpingCountSelect.value - count);
+  }
+
+  const res = await shouldStopWakeUp(count);
+  if (res) {
+    ALARM_IS_PLAYING = false;
   }
 };
 
-const composeCanvasData = () => ({
-  labels: [...Array(PLOT_DATA_LENGTH).keys()],
-  datasets: [
-    { ...datasetTemplate.ax, data: accData.ax },
-    { ...datasetTemplate.ay, data: accData.ay },
-    { ...datasetTemplate.az, data: accData.az },
-  ],
-});
-
-const composeConfig = () => ({
-  type: "line",
-  data: composeCanvasData(),
-  options: { animation: false },
-});
-
-const drawCanvas = (accCanvas) => {
-  updateAccelerationData();
-  let accChart = new Chart(accCanvas, composeConfig()); // Draw the data to canvas
-  return [accChart];
+const tryTurnOnAlarm = () => {
+  if (!ALARM_IS_PLAYING && shouldWakeUp()) {
+    ALARM_IS_PLAYING = true;
+  }
 };
 
-const delCanvas = (canvases) => {
-  canvases.forEach((c) => c.destroy());
+const updateRemainTime = () => {
+  const remainTime = getRemainTime();
+  const hours = parseInt(remainTime / 60);
+  const mins = (remainTime - 60 * hours).toFixed(2);
+  eleRemainTime.innerText = `${hours} hours and ${mins} mins`;
 };
 
-const main = () => {
-  let canvases = null;
+const updateRemainCount = (val) => {
+  eleJumpingCount.innerText = val;
+};
+
+const runDaemons = () => {
   setInterval(() => {
-    if (canvases) delCanvas(canvases);
-    canvases = drawCanvas(accCanvas);
+    updateRemainTime();
+
+    if (ALARM_IS_PLAYING) {
+      tryTurnOffAlarm();
+    } else {
+      tryTurnOnAlarm();
+    }
   }, TIME_INTERVAL);
 };
 
-main();
+const alarmTimeOnChange = (evt) => updateRemainTime();
 
-/*
-const data = {
-  labels,
-  datasets: [
-    {
-      label: "ax",
-      backgroundColor: "rgb(47 119 185)",
-      borderColor: "rgb(47 119 185)",
-      data: [0, 10, 5, 2, 20, 30, 45],
-    },
-    {
-      label: "ay",
-      backgroundColor: "rgb(255, 99, 132)",
-      borderColor: "rgb(255, 99, 132)",
-      data: [0, 17, 8, 2, 18, 30, 70],
-    },
-    {
-      label: "az",
-      backgroundColor: "rgb(109 206 67)",
-      borderColor: "rgb(109 206 67)",
-      data: [0, 17, 8, 2, 18, 30, 70],
-    },
-  ],
+const jumpingCountOnChange = (evt) => updateRemainCount(evt.target.value);
+
+const initialValues = () => {
+  updateRemainTime();
+  updateRemainCount(eleJumpingCountSelect.value);
 };
-*/
+
+const addEventListeners = () => {
+  eleAlarmTime.addEventListener("change", alarmTimeOnChange);
+  eleJumpingCountSelect.addEventListener("change", jumpingCountOnChange);
+};
+
+addEventListeners();
+initialValues();
+runDaemons();

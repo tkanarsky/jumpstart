@@ -55,7 +55,7 @@ select {
     font-weight: bold;
 }
 
-#jumping-count {
+#remain-jumping-count {
     color: red;
     font-weight: bold;
 }

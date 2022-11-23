@@ -55,7 +55,7 @@
                     You will wake up in <span id="remain-time">0 mins</span>.
                 </div>
                 <div class="text">
-                    You still have <span id="jumping-count">5</span> jumping jacks to do
+                    You still have <span id="remain-jumping-count">5</span> jumping jacks to do
                 </div>
             </div>
         </div>
@@ -67,56 +67,7 @@
         <!-- </div> -->
     </div>
 
-    <!-- To create a chart, we need to instantiate the Chart class. To do this, we need to pass in the node, jQuery instance, or 2d context of the canvas of where we want to draw the chart. -->
-    <!-- Make sure to declare the canvas tag in html before the script that creates the Chart.js object. Otherwise, the script executes and tries to find a reference to a canvas that doesn't exist -->
-    <!-- Otherwise: chart.js:13 Failed to create chart: can't acquire context from the given item -->
-    <!-- <script src="index.js"></script> -->
     <script src="fetch.js"></script>
-    <script>
-        const alarmTime = document.querySelector('input[type="time"]');
-        const remainTime = document.getElementById('remain-time');
-        const jumpingCountSelect = document.getElementById('jumping-count-select');
-        const jumpingCount = document.getElementById('jumping-count');
-
-        const getDisplayTime = (date = new Date()) => `${date.getFullYear()}/${`0${date.getMonth() + 1}`.slice(-2)}/${date.getDate()} ${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}`;
-
-        const getTimeDiff = (time1, time2) => (time1.getTime() - time2.getTime()) / (1000 * 60); // measured in minutes
-
-        const updateRemainTime = () => {
-            const tmp = new Date();
-            tmp.setHours(alarmTime.value.split(':')[0]);
-            tmp.setMinutes(alarmTime.value.split(':')[1]);
-            tmp.setSeconds('0');
-
-            const timeDiff = getTimeDiff(tmp, new Date());
-            let val = '';
-            if (timeDiff > 0) {
-                val = timeDiff; // Is in the same day
-            } else {
-                tmp.setDate(tmp.getDate() + 1);
-                val = getTimeDiff(tmp, new Date());
-            }
-            const hours = parseInt(val / 60);
-            const mins = (val - 60 * hours).toFixed(2);
-            remainTime.innerText = `${hours} hours and ${mins} mins`;
-        }
-
-        const alarmTimeOnChange = (evt) => {
-            // const val = evt.target.value;
-            updateRemainTime();
-        }
-
-        const jumpingCountOnChange = (evt) => {
-            const val = jumpingCountSelect.value; // const val = evt.target.value;
-            jumpingCount.innerText = val;
-        }
-
-        alarmTime.addEventListener('change', alarmTimeOnChange);
-        jumpingCountSelect.addEventListener('change', jumpingCountOnChange);
-
-        jumpingCountOnChange();
-        updateRemainTime();
-        setInterval(() => updateRemainTime(), 3000);
-    </script>
+    <script src="index.js"></script>
 </body>
 </html>
