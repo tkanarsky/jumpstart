@@ -13,6 +13,7 @@ const eleAlarmTime = document.querySelector('input[type="time"]');
 const eleRemainTime = document.getElementById("remain-time");
 const eleJumpingCountSelect = document.getElementById("jumping-count-select");
 const eleJumpingCount = document.getElementById("remain-jumping-count");
+const eleAlarmImg = document.getElementById("alarm-image");
 
 const getDisplayTime = (date = new Date()) => `${date.getFullYear()}/${`0${date.getMonth() + 1}`.slice(-2)}/${date.getDate()} ${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}`;
 
@@ -33,7 +34,7 @@ const getLatestData = async () => {
       val = json.sensorValue;
     })
     .catch((err) => console.log(err));
-  console.log(val, "#########");
+  // console.log(val, "#########");
   return val;
 };
 
@@ -59,6 +60,15 @@ const getRemainTime = () => {
   return val; // in minutes
 };
 
+const flashAlarmImg = () => {
+  const nextSrc = eleAlarmImg.src.includes("01.png") ? "alarm02.png" : "alarm01.png";
+  eleAlarmImg.src = nextSrc;
+};
+
+const resetAlarmImg = () => {
+  eleAlarmImg.src = "alarm01.png";
+};
+
 const shouldStopWakeUp = (count) => {
   // console.log(count, eleJumpingCountSelect.value, typeof count !== "undefined", "!!!!!!!!!!!");
   return typeof count !== "undefined" && count >= eleJumpingCountSelect.value;
@@ -74,13 +84,15 @@ const tryTurnOffAlarm = async () => {
   // console.log(count, !isNaN(count), !Number.isNaN(count), eleJumpingCountSelect.value, "########");
 
   if (!isNaN(count)) {
-    // Use isNaN instead of Number.isNaN
     updateRemainCount(eleJumpingCountSelect.value - count);
   }
+
+  flashAlarmImg();
 
   const res = await shouldStopWakeUp(count);
   if (res) {
     ALARM_IS_PLAYING = false;
+    resetAlarmImg();
   }
 };
 
