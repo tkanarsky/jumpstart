@@ -9,7 +9,7 @@
 const noble = require("@abandonware/noble");
 
 const uuid_service = "1101";
-const uuid_value = ["2001", "2002", "2003", "2004", "2005", "2006"];
+const uuid_value = ["2001"];
 
 noble.on("stateChange", async (state) => {
   if (state === "poweredOn") {
@@ -37,22 +37,8 @@ let readData = async (characteristic) => {
   }
 
   const p0 = () => characteristic[0].readAsync();
-  const p1 = () => characteristic[1].readAsync();
-  const p2 = () => characteristic[2].readAsync();
-  const p3 = () => characteristic[3].readAsync();
-  const p4 = () => characteristic[4].readAsync();
-  const p5 = () => characteristic[5].readAsync();
-
-  const [axValue, ayValue, azValue, gxValue, gyValue, gzValue] = await Promise.all([p0(), p1(), p2(), p3(), p4(), p5()]);
-  const sensorValues = {
-    ax: axValue.readFloatLE(0),
-    ay: ayValue.readFloatLE(0),
-    az: azValue.readFloatLE(0),
-    gx: gxValue.readFloatLE(0),
-    gy: gyValue.readFloatLE(0),
-    gz: gzValue.readFloatLE(0),
-  };
-  return sensorValues;
+  const [countVal] = await Promise.all([p0()]);
+  return { count: countVal.readFloatLE(0) }; // Arduino sends data {count: <count value>}
 };
 
 const express = require("express");
