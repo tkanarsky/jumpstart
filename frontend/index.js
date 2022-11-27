@@ -4,23 +4,26 @@
  * npm install cors
  * npm install @abandonware/noble
  */
-const endpoint = "http://127.0.0.1:3000";
 const TIME_INTERVAL = 400;
+const SENSITIVE = 0.5;
 
 let ALARM_IS_PLAYING = false;
+
+const endpoint = "http://127.0.0.1:3000";
 
 const eleAlarmTime = document.querySelector('input[type="time"]');
 const eleRemainTime = document.getElementById("remain-time");
 const eleJumpingCountSelect = document.getElementById("jumping-count-select");
 const eleJumpingCount = document.getElementById("remain-jumping-count");
 const eleAlarmImg = document.getElementById("alarm-image");
+const eleAudio = document.getElementById("alarm-audio");
 
 const getDisplayTime = (date = new Date()) => `${date.getFullYear()}/${`0${date.getMonth() + 1}`.slice(-2)}/${date.getDate()} ${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}`;
 
 const getTimeDiff = (time1, time2) => (time1.getTime() - time2.getTime()) / (1000 * 60); // measured in minutes
 
 const getLatestData = async () => {
-  let val = 0;
+  let val = {};
   const f = fetchData(endpoint, { method: "GET" });
   await f
     .then((resp) => {
@@ -54,7 +57,7 @@ const getRemainTime = () => {
   if (timeDiff >= 0) {
     val = timeDiff; // Is in the same day
   } else {
-    alarmTime.setDate(alarmTime.getDate() + 1);
+    alarmTime.setDate(alarmTime.getDate() + 1); // Add one day
     val = getTimeDiff(alarmTime, new Date());
   }
   return val; // in minutes
@@ -70,18 +73,21 @@ const resetAlarmImg = () => {
 };
 
 const shouldStopWakeUp = (count) => {
-  // console.log(count, eleJumpingCountSelect.value, typeof count !== "undefined", "!!!!!!!!!!!");
-  return typeof count !== "undefined" && count >= eleJumpingCountSelect.value;
+  return count >= eleJumpingCountSelect.value;
 };
 
 const shouldWakeUp = () => {
   const remainTime = getRemainTime();
-  return remainTime < 0.5;
+  return remainTime < SENSITIVE;
 };
+
+const playAudio = () => eleAudio.play();
+
+const pauseAudio = () => eleAudio.pause();
 
 const tryTurnOffAlarm = async () => {
   const { count } = await getLatestData();
-  // console.log(count, !isNaN(count), !Number.isNaN(count), eleJumpingCountSelect.value, "########");
+  // console.log(count, typeof count !== "undefined", !isNaN(count), !Number.isNaN(count), eleJumpingCountSelect.value);
 
   if (!isNaN(count)) {
     updateRemainCount(eleJumpingCountSelect.value - count);
@@ -89,16 +95,18 @@ const tryTurnOffAlarm = async () => {
 
   flashAlarmImg();
 
-  const res = await shouldStopWakeUp(count);
+  const res = await shouldStopWakeUp(count ?? 0);
   if (res) {
     ALARM_IS_PLAYING = false;
     resetAlarmImg();
+    pauseAudio();
   }
 };
 
 const tryTurnOnAlarm = () => {
   if (!ALARM_IS_PLAYING && shouldWakeUp()) {
     ALARM_IS_PLAYING = true;
+    playAudio();
   }
 };
 
@@ -125,11 +133,11 @@ const runDaemons = () => {
   }, TIME_INTERVAL);
 };
 
-const alarmTimeOnChange = (evt) => updateRemainTime();
+const alarmTimeOnChange = (_) => updateRemainTime();
 
 const jumpingCountOnChange = (evt) => updateRemainCount(evt.target.value);
 
-const initialValues = () => {
+const initValues = () => {
   updateRemainTime();
   updateRemainCount(eleJumpingCountSelect.value);
 };
@@ -140,5 +148,5 @@ const addEventListeners = () => {
 };
 
 addEventListeners();
-initialValues();
+initValues();
 runDaemons();
