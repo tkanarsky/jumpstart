@@ -37,7 +37,7 @@ const getLatestData = async () => {
       val = json.sensorValue;
     })
     .catch((err) => console.log(err));
-  // console.log(val, "#########");
+  // console.log(val, "#########"); // Uncomment this line for debugging
   return val;
 };
 
