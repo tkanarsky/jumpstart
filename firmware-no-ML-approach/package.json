@@ -1,0 +1,18 @@
+{
+  "name": "m3-stream-data-to-computer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@abandonware/noble": "^1.9.2-15",
+    "bluetooth-hci-socket": "^0.5.1",
+    "express": "^4.18.2",
+    "noble-uwp": "^0.6.2",
+    "plotly.js": "^1.47.4"
+  }
+}
