@@ -22,3 +22,9 @@
 .DS_Store
 
 npm-debug.log*
+
+# Virtual environments
+env/ 
+
+# VSCode config
+.vscode

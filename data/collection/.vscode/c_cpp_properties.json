@@ -1,0 +1,87 @@
+//
+// !!! WARNING !!! AUTO-GENERATED FILE!
+// PLEASE DO NOT MODIFY IT AND USE "platformio.ini":
+// https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags
+//
+{
+    "configurations": [
+        {
+            "name": "PlatformIO",
+            "includePath": [
+                "/home/tim/ucla/f22/ecem119/jumpstart/data/collection/include",
+                "/home/tim/ucla/f22/ecem119/jumpstart/data/collection/src",
+                "/home/tim/ucla/f22/ecem119/jumpstart/data/collection/.pio/libdeps/nano_33_iot/Arduino_LSM6DS3/src",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/Wire",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SPI",
+                "/home/tim/.platformio/packages/framework-arduino-samd/cores/arduino/api/deprecated",
+                "/home/tim/.platformio/packages/framework-arduino-samd/cores/arduino/api/deprecated-avr-comp",
+                "/home/tim/.platformio/packages/framework-cmsis@1.40500.0/CMSIS/Include",
+                "/home/tim/.platformio/packages/framework-cmsis-atmel/CMSIS/Device/ATMEL",
+                "/home/tim/.platformio/packages/framework-arduino-samd/cores/arduino",
+                "/home/tim/.platformio/packages/framework-arduino-samd/variants/nano_33_iot",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/HID",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/I2S/src",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SAMD_AnalogCorrection/src",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SAMD_BootloaderUpdater/src",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SBU/src",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SDU/src",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SFU/src",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SNU/src",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SSU/src",
+                "/home/tim/.platformio/packages/framework-arduino-samd/libraries/USBHost/src",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "/home/tim/ucla/f22/ecem119/jumpstart/data/collection/include",
+                    "/home/tim/ucla/f22/ecem119/jumpstart/data/collection/src",
+                    "/home/tim/ucla/f22/ecem119/jumpstart/data/collection/.pio/libdeps/nano_33_iot/Arduino_LSM6DS3/src",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/Wire",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SPI",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/cores/arduino/api/deprecated",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/cores/arduino/api/deprecated-avr-comp",
+                    "/home/tim/.platformio/packages/framework-cmsis@1.40500.0/CMSIS/Include",
+                    "/home/tim/.platformio/packages/framework-cmsis-atmel/CMSIS/Device/ATMEL",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/cores/arduino",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/variants/nano_33_iot",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/HID",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/I2S/src",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SAMD_AnalogCorrection/src",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SAMD_BootloaderUpdater/src",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SBU/src",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SDU/src",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SFU/src",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SNU/src",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/SSU/src",
+                    "/home/tim/.platformio/packages/framework-arduino-samd/libraries/USBHost/src",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=60105",
+                "ARDUINO_SAMD_NANO_33_IOT",
+                "CRYSTALLESS",
+                "__SAMD21G18A__",
+                "ARDUINO=10805",
+                "F_CPU=48000000L",
+                "USBCON",
+                "USB_VID=0x2341",
+                "USB_PID=0x8057",
+                "USB_PRODUCT=\"Arduino NANO 33 IoT\"",
+                "USB_MANUFACTURER=\"Arduino\"",
+                "ARDUINO_ARCH_SAMD",
+                ""
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "compilerPath": "/home/tim/.platformio/packages/toolchain-gccarmnoneeabi@1.70201.0/bin/arm-none-eabi-gcc",
+            "compilerArgs": [
+                "-mcpu=cortex-m0plus",
+                "-mthumb",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}
