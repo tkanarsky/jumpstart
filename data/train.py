@@ -69,5 +69,5 @@ import micromlgen as mlgen
 
 c = mlgen.port(clf)
 
-with open('jumping_jack_detector.', 'w') as f:
+with open('jumping_jack_detector.h', 'w') as f:
     f.write(c)
