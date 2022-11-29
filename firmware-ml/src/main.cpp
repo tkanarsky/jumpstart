@@ -164,28 +164,50 @@ void print_buffers()
     }
 }
 
+// Perform low-pass filter on predictions 
+// Use exponential moving average; alpha is the weight of the new value.
+
+#define LPF_ALPHA 0.2
+
+// Drive state machine using filtered prediction values.
+// State machine has two values -- DETECTING and NOT_DETECTING.
+// Machine starts off in NOT_DETECTING state.
+// Define two thresholds -- DETECTING_THRESHOLD and NOT_DETECTING_THRESHOLD.
+// If we are in NOT_DETECTING state and prediction is above DETECTING_THRESHOLD, transition to DETECTING state.
+// If we are in DETECTING state and prediction is below NOT_DETECTING_THRESHOLD, transition to NOT_DETECTING state and increment jumping jack counter
+// DETECTING_THRESHOLD should be greater than NOT_DETECTING_THRESHOLD to add a bit of hysteresis.
+
+enum State
+{
+    NOT_DETECTING,
+    DETECTING
+};
+
+#define DETECTING_THRESHOLD 0.9
+#define NOT_DETECTING_THRESHOLD 0.5
+
 void loop()
 {
     BLEDevice central = BLE.central();
     static float ax, ay, az, rx, ry, rz;
-    static bool pressed = 0;
-    static char text_buf[100];
     uint32_t global_sample_idx = 0;
+    uint32_t jj_count = 0;
+    float prediction_avg = 0;   
+    State state = NOT_DETECTING;
     bool still_connected = central.connected();
-    while (1)
+    while (still_connected)
     {
         digitalWrite(LED_BUILTIN, HIGH);
         if (IMU.accelerationAvailable() && IMU.gyroscopeAvailable())
         {
             IMU.readAcceleration(ax, ay, az);
             IMU.readGyroscope(rx, ry, rz);
-            pressed = digitalRead(BUTTON);
+            // Apply calibration
             rx -= rx0;
             ry -= ry0;
             rz -= rz0;
             float *buf = write_sample_to_buffer(global_sample_idx, ax, ay, az, rx, ry, rz);
             global_sample_idx++;
-            // print_buffers();
             if (buf != nullptr)
             {
                 still_connected = central.connected();
@@ -194,8 +216,24 @@ void loop()
                     break;
                 }
                 uint8_t label = forest.predict(buf);
-                jjDetectorChar.setValue(label);
-                Serial.println("prediction: " + String(label));
+                prediction_avg = LPF_ALPHA * label + (1 - LPF_ALPHA) * prediction_avg;
+                // Serial.print("Prediction_avg: ");
+                // Serial.println(prediction_avg);
+                if (state == NOT_DETECTING && prediction_avg > DETECTING_THRESHOLD)
+                {
+                    state = DETECTING;
+                    // Serial.println("Transitioning to DETECTING state");
+                }
+                else if (state == DETECTING && prediction_avg < NOT_DETECTING_THRESHOLD)
+                {
+                    // Serial.println("Transitioning to NOT_DETECTING state");
+                    state = NOT_DETECTING;
+                    jj_count++;
+                    jjDetectorChar.setValue(jj_count);
+                    // Serial.print("New jj count: ");
+                    // Serial.println(jj_count);
+                }
+                // Serial.println("prediction: " + String(label));
             }
         }
         delay(50);
