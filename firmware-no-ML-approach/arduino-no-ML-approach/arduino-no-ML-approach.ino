@@ -242,11 +242,11 @@ void loop() {
     linkedList_ay.remove(0);
     linkedList_ay.add(ay);
 
-    Serial.print(gz);
-    Serial.print("   ");
-    Serial.print(ax);
-    Serial.print("   ");
-    Serial.println(ay);
+    // Serial.print(gz);
+    // Serial.print("   ");
+    // Serial.print(ax);
+    // Serial.print("   ");
+    // Serial.println(ay);
 
 
     if(jumping_jack(linkedList_gz, linkedList_ax, linkedList_ay)) {
