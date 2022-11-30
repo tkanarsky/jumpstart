@@ -1,11 +1,12 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: "Roboto";
 }
 
 #navbar {
     width: 100%;
-    background-color: rgb(255 222 92);
+    background-color: rgb(249 194 92);
     color: white;
     font-weight: bold;
     font-size: 8em;
@@ -14,14 +15,14 @@ body {
 }
 
 #wrapper {
-    margin: 32px;
+    margin: 24px 3%;
     padding: 8px;
 }
 
 .row-section {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
     margin: 30px 0;
 }
 
@@ -40,8 +41,8 @@ body {
 
 input {
     border-radius: 5px;
-    border-width: 2px;
-    font-size: 1.3em;
+    border-width: 1.9px;
+    font-size: 1.35em;
 }
 
 select {
@@ -51,11 +52,11 @@ select {
 }
 
 #remain-time {
-    color: red;
+    color: rgb(249 194 92);
     font-weight: bold;
 }
 
 #remain-jumping-count {
-    color: red;
+    color: rgb(249 194 92);
     font-weight: bold;
 }
