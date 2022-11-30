@@ -4,7 +4,7 @@
  * npm install cors
  * npm install @abandonware/noble
  */
-const TIME_INTERVAL = 400;
+const TIME_INTERVAL = 50;
 const SENSITIVE = 0;
 
 let ALARM_IS_PLAYING = false;
