@@ -10,7 +10,7 @@
 
 float rx0, ry0, rz0;
 
-Eloquent::ML::Port::RandomForest forest;
+Eloquent::ML::Port::XGBClassifier xgb;
 
 BLEService jjDetectorService("7b048f32-b31d-4d94-ba3a-153d27ff6905");
 BLEUnsignedIntCharacteristic jjDetectorChar("7b048f32-b31d-4d94-ba3a-153d27ff6906", BLERead | BLENotify);
@@ -215,7 +215,7 @@ void loop()
                 {
                     break;
                 }
-                uint8_t label = forest.predict(buf);
+                uint8_t label = xgb.predict(buf);
                 prediction_avg = LPF_ALPHA * label + (1 - LPF_ALPHA) * prediction_avg;
                 // Serial.print("Prediction_avg: ");
                 // Serial.println(prediction_avg);

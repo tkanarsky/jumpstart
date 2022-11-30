@@ -8,7 +8,7 @@ import numpy as np
 df = pd.read_csv('jumping_jacks_and_noise_combined.csv')
 
 SAMPLES_PER_CHUNK = 20
-OVERLAP = 1
+OVERLAP = 2
 
 # Samples are read every 50ms. We use a window size of SAMPLES_PER_CHUNK.
 # Split the dataframe into chunks, overlapping by OVERLAP samples.
@@ -43,13 +43,23 @@ for chunk in chunks:
 X = np.array(reshaped_chunks, dtype=np.float32)
 y = np.array(labels, dtype=np.int32)
 
+# create a dummy class (avoids issue with XGB not supporting single class)
+# that maps infinite values to dummy class
+X[-1] = 1000000
+y[-1] = y.max() + 1
+
+
 # Split into training and test sets
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Train a random forest classifier
 from sklearn.ensemble import RandomForestClassifier
-clf = RandomForestClassifier(n_estimators=200, max_depth=4, random_state=0)
+# clf = RandomForestClassifier(n_estimators=150, max_depth=10, random_state=0)
+
+# Train an XGBoost classifier
+from xgboost import XGBClassifier
+clf = XGBClassifier(n_estimators=20, max_depth=6, random_state=0)
 clf.fit(X_train, y_train)
 
 print(clf.score(X_test, y_test))
