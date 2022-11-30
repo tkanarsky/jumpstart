@@ -16,8 +16,8 @@
     <!-- Font Awesome. Link:  https://cdnjs.com/libraries/font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Sweet Alert -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <script>
         const { ['log']: c } = console;
@@ -30,6 +30,8 @@
         <div class="row-section">
             <div>
                 <img id='alarm-image' src="alarm01.png" alt="alarm icon" width=280>
+            </div>
+            <div style="width: 7%">
             </div>
             <div class="col-section">
                 <div>
@@ -52,10 +54,10 @@
                     </select>
                 </div>
                 <div class="text">
-                    You will wake up in <span id="remain-time">0 mins</span>.
+                    You will wake up in <span id="remain-time">0 mins</span>
                 </div>
                 <div class="text">
-                    You still have <span id="remain-jumping-count">5</span> jumping jacks to do
+                    You still have&nbsp;<span id="remain-jumping-count">5</span>&nbsp;jumping jacks to do
                 </div>
             </div>
         </div>

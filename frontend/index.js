@@ -20,6 +20,8 @@ const eleAudio = document.getElementById("alarm-audio");
 
 const getDisplayTime = (date = new Date()) => `${date.getFullYear()}/${`0${date.getMonth() + 1}`.slice(-2)}/${date.getDate()} ${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}`;
 
+const formatDisplayTime = (h, m, s) => `${`0${h}`.slice(-2)}:${`0${m}`.slice(-2)}:${`0${s}`.slice(-2)}`;
+
 const getTimeDiff = (time1, time2) => (time1.getTime() - time2.getTime()) / (1000 * 60); // measured in minutes
 
 const getLatestData = async () => {
@@ -72,6 +74,19 @@ const resetAlarmImg = () => {
   eleAlarmImg.src = "alarm01.png";
 };
 
+// const showWakeUpMessage = () => window.alert("Enjoy your day ☀️☀️☀️");
+const showWakeUpMessage = () =>
+  swal({
+    title: "Enjoy your day ☀️☀️☀️",
+    text: "You've done the jumping!",
+    icon: "success",
+    button: "Aww yiss!",
+  });
+
+const pauseAudio = () => eleAudio.pause();
+
+const playAudio = () => eleAudio.play();
+
 const shouldStopWakeUp = (count) => {
   return count >= eleJumpingCountSelect.value;
 };
@@ -80,10 +95,6 @@ const shouldWakeUp = () => {
   const remainTime = getRemainTime();
   return remainTime < SENSITIVE;
 };
-
-const playAudio = () => eleAudio.play();
-
-const pauseAudio = () => eleAudio.pause();
 
 const tryTurnOffAlarm = async () => {
   const { count } = await getLatestData();
@@ -100,6 +111,7 @@ const tryTurnOffAlarm = async () => {
     ALARM_IS_PLAYING = false;
     resetAlarmImg();
     pauseAudio();
+    showWakeUpMessage();
   }
 };
 
@@ -111,10 +123,11 @@ const tryTurnOnAlarm = () => {
 };
 
 const updateRemainTime = () => {
-  const remainTime = getRemainTime();
-  const hours = parseInt(remainTime / 60);
-  const mins = (remainTime - 60 * hours).toFixed(2);
-  eleRemainTime.innerText = `${hours} hours and ${mins} mins`;
+  const remainSecs = getRemainTime() * 60;
+  const hours = parseInt(remainSecs / 3600);
+  const mins = parseInt((remainSecs - 3600 * hours) / 60);
+  const secs = parseInt(remainSecs - 3600 * hours - 60 * mins);
+  eleRemainTime.innerText = formatDisplayTime(hours, mins, secs);
 };
 
 const updateRemainCount = (val) => {
