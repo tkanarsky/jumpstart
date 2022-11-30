@@ -32,9 +32,9 @@ void setup() {
       ;
   }
 
-  Serial.print("Accelerometer sample rate = ");
-  Serial.print(IMU.accelerationSampleRate());
-  Serial.println("Hz");
+  // Serial.print("Accelerometer sample rate = ");
+  // Serial.print(IMU.accelerationSampleRate());
+  // Serial.println("Hz");
 
   // print_values_to_serial_csv("gz");          
 
@@ -219,8 +219,8 @@ void loop() {
   // if a central is connected to peripheral:
   if (central) {
 
-    Serial.print("Connected to central: ");
-    Serial.println();
+    // Serial.print("Connected to central: ");
+    // Serial.println();
 
     float ax, ay, az;
     float gx, gy, gz;
@@ -250,7 +250,7 @@ void loop() {
 
 
     if(jumping_jack(linkedList_gz, linkedList_ax, linkedList_ay)) {
-      Serial.println("jumpingJack");
+      // Serial.println("jumpingJack");
       jumpingJackCount++;
       linkedList_gz.clear();
       linkedList_ax.clear();
