@@ -8,7 +8,7 @@ import numpy as np
 df = pd.read_csv('jumping_jacks_and_noise_combined.csv')
 
 SAMPLES_PER_CHUNK = 20
-OVERLAP = 2
+OVERLAP = 1
 
 # Samples are read every 50ms. We use a window size of SAMPLES_PER_CHUNK.
 # Split the dataframe into chunks, overlapping by OVERLAP samples.

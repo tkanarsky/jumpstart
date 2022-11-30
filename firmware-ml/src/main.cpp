@@ -5,8 +5,6 @@
 #include "jumping_jack_detector.h"
 
 #define BUTTON 12
-#define SAMPLES_PER_CHUNK 20
-#define OVERLAP 5
 
 float rx0, ry0, rz0;
 
