@@ -183,7 +183,7 @@ enum State
     DETECTING
 };
 
-#define DETECTING_THRESHOLD 0.9
+#define DETECTING_THRESHOLD 0.8
 #define NOT_DETECTING_THRESHOLD 0.5
 
 void loop()
