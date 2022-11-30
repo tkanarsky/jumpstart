@@ -8,7 +8,7 @@ import numpy as np
 df = pd.read_csv('jumping_jacks_and_noise_combined.csv')
 
 SAMPLES_PER_CHUNK = 20
-OVERLAP = 5
+OVERLAP = 1
 
 # Samples are read every 50ms. We use a window size of SAMPLES_PER_CHUNK.
 # Split the dataframe into chunks, overlapping by OVERLAP samples.
@@ -49,7 +49,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 # Train a random forest classifier
 from sklearn.ensemble import RandomForestClassifier
-clf = RandomForestClassifier(n_estimators=100, max_depth=3, random_state=0)
+clf = RandomForestClassifier(n_estimators=200, max_depth=4, random_state=0)
 clf.fit(X_train, y_train)
 
 print(clf.score(X_test, y_test))
