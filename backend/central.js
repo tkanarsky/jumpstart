@@ -8,13 +8,13 @@
 
 const noble = require("@abandonware/noble");
 
-const uuid_service = "1101";
-const uuid_value = ["2001"];
+const uuid_service = "7b048f32b31d4d94ba3a153d27ff6905";
+const uuid_value = ["7b048f32b31d4d94ba3a153d27ff6906"];
 
 noble.on("stateChange", async (state) => {
   if (state === "poweredOn") {
     console.log("start scanning");
-    await noble.startScanningAsync([uuid_service], false);
+    noble.startScanningAsync([uuid_service], false);
   }
 });
 
@@ -38,7 +38,7 @@ let readData = async (characteristic) => {
 
   const p0 = () => characteristic[0].readAsync();
   const [countVal] = await Promise.all([p0()]);
-  return { count: countVal.readFloatLE(0) }; // Arduino sends data {count: <count value>}
+  return { count: countVal.readUInt32LE()}; // Arduino sends data {count: <count value>}
 };
 
 const express = require("express");
