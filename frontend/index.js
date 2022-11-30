@@ -5,7 +5,7 @@
  * npm install @abandonware/noble
  */
 const TIME_INTERVAL = 400;
-const SENSITIVE = 0.5;
+const SENSITIVE = 0;
 
 let ALARM_IS_PLAYING = false;
 
@@ -93,7 +93,7 @@ const shouldStopWakeUp = (count) => {
 
 const shouldWakeUp = () => {
   const remainTime = getRemainTime();
-  return remainTime < SENSITIVE;
+  return remainTime < SENSITIVE || remainTime > 24 * 60 - 1; // The time will be reset to 24hours immediately after counting down to zero
 };
 
 const tryTurnOffAlarm = async () => {
