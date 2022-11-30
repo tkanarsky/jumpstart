@@ -189,6 +189,7 @@ void loop()
     BLEDevice central = BLE.central();
     static float ax, ay, az, rx, ry, rz;
     uint32_t global_sample_idx = 0;
+    uint32_t last_jj_update = 0;
     uint32_t jj_count = 0;
     float prediction_avg = 0;   
     State state = NOT_DETECTING;
@@ -227,6 +228,7 @@ void loop()
                     // Serial.println("Transitioning to NOT_DETECTING state");
                     state = NOT_DETECTING;
                     jj_count++;
+                    last_jj_update = global_sample_idx;
                     jjDetectorChar.setValue(jj_count);
                     // Serial.print("New jj count: ");
                     // Serial.println(jj_count);
@@ -235,6 +237,14 @@ void loop()
             }
         }
         delay(50);
+        // Reset jj count if we haven't seen a jumping jack in a while
+        // currently set to 30 seconds (20 samples per second * 30 seconds = 600 samples)
+        if (global_sample_idx - last_jj_update > 600)
+        {
+            jj_count = 0;
+            jjDetectorChar.setValue(jj_count);
+            // Serial.println("Resetting jj count");
+        }
     }
     digitalWrite(LED_BUILTIN, LOW);
     delay(1000);
